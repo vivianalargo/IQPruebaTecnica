@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Datos;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,54 +14,67 @@ namespace IQPruebaTecnica.Controllers
     {
         // GET: api/<AuditoriaController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Auditoria> Get()
         {
-            Conexion.Connect();
-
-            SqlCommand sql_cmnd = new SqlCommand("ListarUsuarios", Conexion.conn);
-
-            sql_cmnd.CommandType = CommandType.StoredProcedure;
-            //sql_cmnd.Parameters.AddWithValue("@FIRST_NAME", SqlDbType.NVarChar).Value = firstName;
-            //sql_cmnd.Parameters.AddWithValue("@LAST_NAME", SqlDbType.NVarChar).Value = lastName;
-            //sql_cmnd.Parameters.AddWithValue("@AGE", SqlDbType.Int).Value = age;
-
-            SqlDataReader reader = sql_cmnd.ExecuteReader();
-            while (reader.Read())
+            
+            try
             {
-                Menu menu = new Menu();
-                menu.Tenmon = reader["TenMon"].ToString();
-                menu.Loaimon = reader["LoaiMon"].ToString();
-                menulist.Add(menu);
+                Conexion.Connect();
+
+                SqlCommand sql_cmnd = new SqlCommand("ListarAuditorias", Conexion.conn);
+
+                sql_cmnd.CommandType = CommandType.StoredProcedure;
+                //sql_cmnd.Parameters.AddWithValue("@FIRST_NAME", SqlDbType.NVarChar).Value = firstName;
+                //sql_cmnd.Parameters.AddWithValue("@LAST_NAME", SqlDbType.NVarChar).Value = lastName;
+                //sql_cmnd.Parameters.AddWithValue("@AGE", SqlDbType.Int).Value = age;
+
+                List<Auditoria> listaAuditorias = new List<Auditoria>();
+
+                SqlDataReader reader = sql_cmnd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Auditoria auditoria = new Auditoria();
+                    auditoria.id = Convert.ToInt32(reader["id"]);
+                    auditoria.iduser = Convert.ToInt32(reader["iduser"]);
+                    auditoria.fecha = Convert.ToDateTime(reader["fecha"]);
+
+                    listaAuditorias.Add(auditoria);
+                }
+                //sql_cmnd.ExecuteReader();
+                Conexion.conn.Close();
+
+                return listaAuditorias;
+
             }
-            sql_cmnd.ExecuteReader();
-            Conexion.conn.Close();
+            catch(Exception ex) {
+                return Enumerable.Empty<Auditoria>();
+            }
 
-            return new string[] { "value1", "value2" };
+            
         }
 
-        // GET api/<AuditoriaController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
-        // POST api/<AuditoriaController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
 
-        // PUT api/<AuditoriaController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        //// POST api/<AuditoriaController>
+        //[HttpPost]
+        //public void Post([FromBody] int id,int idUser, string fecha)
+        //{
+        //    Conexion.Connect();
 
-        // DELETE api/<AuditoriaController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        //    SqlCommand sql_cmnd = new SqlCommand("GuardarAuditoria", Conexion.conn);
+
+        //    sql_cmnd.CommandType = CommandType.StoredProcedure;
+        //    sql_cmnd.Parameters.AddWithValue("@id", SqlDbType.Int).Value = id;
+        //    sql_cmnd.Parameters.AddWithValue("@idUSer", SqlDbType.Int).Value = idUser;
+        //    sql_cmnd.Parameters.AddWithValue("@fecha", SqlDbType.DateTime).Value = DateTime.Now;
+
+        //    sql_cmnd.ExecuteNonQuery();
+
+
+        //    Conexion.conn.Close();
+
+        //}
+
+
     }
 }

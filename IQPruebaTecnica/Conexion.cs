@@ -9,19 +9,29 @@ namespace IQPruebaTecnica
         public static SqlConnection conn = new SqlConnection();
         public static void Connect()
         {
-            string constr;
-
- 
-            constr = @"Server=DESKTOP-IANU77J\\SQLEXPRESS; DataBase=PruebaTecnicaIQ; Persist Security Info=True;Trusted_Connection=True;";
-
-            conn = new SqlConnection(constr);
-
-            
-            conn.Open();
+            try
+            {
+                string constr;
 
 
-            // to close the connection
-            //conn.Close();
+                constr = @"Server=DESKTOP-IANU77J\SQLEXPRESS; DataBase=PruebaTecnicaIQ;Trusted_Connection=True;";
+
+                conn = new SqlConnection(constr);
+
+
+                conn.Open();
+
+
+                // to close the connection
+                //conn.Close();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+
+
         }
     }
 }
