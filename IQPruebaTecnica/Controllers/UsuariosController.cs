@@ -63,9 +63,9 @@ namespace IQPruebaTecnica.Controllers
 
 
         [HttpPost]
-        public int Post([FromQuery] string username, [FromQuery] string nombre, [FromQuery] string password)
+        public int Post(Usuario usuario)
         {
-
+            var respuesta = 0;
             try
             {
                 Conexion.Connect();
@@ -73,12 +73,12 @@ namespace IQPruebaTecnica.Controllers
                 SqlCommand sql_cmnd = new SqlCommand("GuardarUsuarios", Conexion.conn);
 
                 sql_cmnd.CommandType = CommandType.StoredProcedure;
-                sql_cmnd.Parameters.AddWithValue("@id", SqlDbType.Int).Value = 0;
-                sql_cmnd.Parameters.AddWithValue("@username", SqlDbType.VarChar).Value = username;
-                sql_cmnd.Parameters.AddWithValue("@nombre", SqlDbType.VarChar).Value = nombre;
-                sql_cmnd.Parameters.AddWithValue("@password", SqlDbType.VarChar).Value = password;
+                sql_cmnd.Parameters.AddWithValue("@id", SqlDbType.Int).Value = usuario.id;
+                sql_cmnd.Parameters.AddWithValue("@username", SqlDbType.VarChar).Value = usuario.username;
+                sql_cmnd.Parameters.AddWithValue("@nombre", SqlDbType.VarChar).Value = usuario.nombre;
+                sql_cmnd.Parameters.AddWithValue("@password", SqlDbType.VarChar).Value = usuario.password;
 
-                var respuesta = sql_cmnd.ExecuteNonQuery();
+                respuesta = sql_cmnd.ExecuteNonQuery();
 
 
                 Conexion.conn.Close();

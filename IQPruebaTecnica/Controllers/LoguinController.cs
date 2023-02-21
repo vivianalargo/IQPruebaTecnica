@@ -12,7 +12,7 @@ namespace IQPruebaTecnica.Controllers
     {
 
         [HttpGet]
-        public ActionResult<Object> Get([FromQuery] string username, [FromQuery] string password)
+        public ActionResult<Object> Get(Usuario usuario)
         {
             try
             {
@@ -23,8 +23,8 @@ namespace IQPruebaTecnica.Controllers
 
                 sql_cmnd.CommandType = CommandType.StoredProcedure;
 
-                sql_cmnd.Parameters.AddWithValue("@username", SqlDbType.VarChar).Value = username;
-                sql_cmnd.Parameters.AddWithValue("@password", SqlDbType.VarChar).Value = password;
+                sql_cmnd.Parameters.AddWithValue("@username", SqlDbType.VarChar).Value = usuario.username;
+                sql_cmnd.Parameters.AddWithValue("@password", SqlDbType.VarChar).Value = usuario.password;
 
                 SqlDataReader reader = sql_cmnd.ExecuteReader();
                 while (reader.Read())
